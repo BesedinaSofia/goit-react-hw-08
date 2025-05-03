@@ -13,3 +13,6 @@
   margin-bottom: 20px;
   color: #1a35e6;
 }
+.error-message {
+  color: red;
+}
