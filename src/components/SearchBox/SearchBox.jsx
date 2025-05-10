@@ -1,18 +1,30 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { changeFilter } from '../../redux/filtersSlice';
-import css from './SearchBox.module.css';
+import { changeFilter } from '../../redux/filters/slice';
+import { InputAdornment, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-export default function SearchBox() {
+function SearchBox() {
   const dispatch = useDispatch();
-  const filter = useSelector(state => state.filters.name);
+  const { name: search } = useSelector(state => state.filters);
 
   return (
-    <input
-      className={css.input}
-      type="text"
-      value={filter}
+    <TextField
+      type='search'
+      value={search}
       onChange={e => dispatch(changeFilter(e.target.value))}
-      placeholder="Пошук контакту"
-    />
+      slotProps={{
+        input: {
+          startAdornment: (
+            <InputAdornment position='start'>
+              <SearchIcon />
+            </InputAdornment>
+          ),
+          sx: { backgroundColor: 'white' },
+        },
+      }}
+      size='small'
+    ></TextField>
   );
 }
+
+export default SearchBox;
