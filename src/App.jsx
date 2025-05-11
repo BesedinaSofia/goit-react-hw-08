@@ -1,3 +1,4 @@
+
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -11,12 +12,13 @@ import RestrictedRoute from './components/RestrictedRoute/RestrictedRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import HomePage from './pages/HomePage/HomePage';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { refreshUser } from './redux/auth/operations';
 
 function App() {
   const dispatch = useDispatch();
+  const isRefreshing = useSelector(state => state.auth.isRefreshing);
 
   useEffect(() => {
     dispatch(refreshUser());
@@ -24,46 +26,19 @@ function App() {
 
   return (
     <>
-      <Layout>
-        <Routes>
-          <Route
-            path='/'
-            element={<HomePage />}
-          />
-
-          <Route
-            path='/contacts'
-            element={
-              <PrivateRoute>
-                <ContactsPage />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path='/login'
-            element={
-              <RestrictedRoute>
-                <LoginPage />
-              </RestrictedRoute>
-            }
-          />
-
-          <Route
-            path='/register'
-            element={
-              <RestrictedRoute>
-                <RegistrationPage />
-              </RestrictedRoute>
-            }
-          />
-
-          <Route
-            path='*'
-            element={<NotFoundPage />}
-          />
-        </Routes>
-      </Layout>
+      {isRefreshing ? (
+        <div>Loading...</div>
+      ) : (
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/contacts" element={<PrivateRoute><ContactsPage /></PrivateRoute>} />
+            <Route path="/login" element={<RestrictedRoute><LoginPage /></RestrictedRoute>} />
+            <Route path="/register" element={<RestrictedRoute><RegistrationPage /></RestrictedRoute>} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Layout>
+      )}
     </>
   );
 }
